@@ -26,23 +26,14 @@ warmStrategyCache({
 
 registerRoute(({ request }) => request.mode === "navigate", pageCache);
 
-// TODO: Implement asset caching
-registerRoute(
-	// Here we define the callback function that will filter the requests we want to cache (in this case, JS and CSS files)
-	({ request }) => {
-		["style", "script", "worker"].includes(request.destination),
-			new StaleWhileRevalidate({
-				// Name of the cache storage.
-				cacheName: "asset-cache",
-				plugins: [
-					// https://developer.chrome.com/docs/workbox/reference/workbox-cacheable-response/#type-CacheableResponse
-					// https://developer.chrome.com/docs/workbox/modules/workbox-cacheable-response/
-					// If both statuses and headers are specified, then both conditions must be met for the Response to be considered cacheable.
-					// HTTP StatusCode=0 is associated with incomplete capture of a hit or page and often with a labeling of the hit as: request canceled ("ReqCancelled=Client" "ReqCancelled=Server" or "ReqCancelled=True").
-					new CacheableResponsePlugin({
-						statuses: [0, 200],
-					}),
-				],
-			});
-	}
-);
+registerRoute(({ request }) => {
+	["style", "script", "worker"].includes(request.destination),
+		new StaleWhileRevalidate({
+			cacheName: "asset-cache",
+			plugins: [
+				new CacheableResponsePlugin({
+					statuses: [0, 200],
+				}),
+			],
+		});
+});
