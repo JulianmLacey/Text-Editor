@@ -27,11 +27,14 @@ module.exports = () => {
 			}),
 
 			// Injects our custom service worker
-
+			new InjectManifest({
+				swSrc: "./src-sw.js",
+				swDest: "src-sw.js",
+			}),
 			// Creates a manifest.json file.
 			new WebpackPwaManifest({
-				//fingerprints: false,
-				//inject: true,
+				fingerprints: false,
+				inject: true,
 				name: "JATE",
 				short_name: "JATE",
 				description: "Online text editor",
@@ -47,10 +50,7 @@ module.exports = () => {
 					},
 				],
 			}),
-			new InjectManifest({
-				swSrc: "./src-sw.js",
-				swDest: "src-sw.js",
-			}),
+
 			new WorkboxPlugin.GenerateSW({
 				// Do not precache images
 				exclude: [/\.(?:png|jpg|jpeg|svg)$/],
